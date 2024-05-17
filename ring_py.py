@@ -19,12 +19,12 @@ while(1):
 
     if 0 == rank:
         message = message - 1
-        print ("Process %d decremented value: %d\n"%(rank, message))
+        print ("Process %d decremented value: %d"%(rank, message))
 
     comm.send(message, dest=next_proc, tag=tag)
 
     if 0 == message:
-        print ("Process %d exiting\n" %(rank))
+        print ("Process %d exiting" %(rank))
         break
 
 if 0 == rank:
