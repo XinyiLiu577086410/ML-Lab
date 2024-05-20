@@ -3,12 +3,12 @@ import pandas as pd
 from mpi4py import MPI 
 from tqdm import tqdm
 
-def Minkovskiy(x, y, p = 2):
+def Minkowski(x, y, p = 2):
 	return np.sum(abs(x - y) ** p) ** (1 / p)
 
 # 参数:
-K = 5 #  邻居个数
-P = 2 #  Minkovskiy 距离的 p 值
+K = 2 #  邻居个数
+P = 2 #  Minkowski 距离的 p 值
 VecLen = 784 #  特征向量长度
 
 if __name__ == "__main__":
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 	res_send = []
 
 	for point in test_np_recv:
-		distances = np.array([[Minkovskiy(point, x[1:]), x[0]] for x in train_np])
+		distances = np.array([[Minkowski(point, x[1:]), x[0]] for x in train_np])
 		distances = distances[distances[:, 0].argsort()][:K]
 		# 统计 label 0～9 在邻近点出现了几次
 		tmp = np.array([[i, np.sum(distances[..., 1] == i)] for i in range(0, 10)]) 
@@ -69,4 +69,4 @@ if __name__ == "__main__":
 	if rank == 0:
 		data = np.array([[i + 1 for i in range(_total)], res_recv[:_total]])
 		tmp = pd.DataFrame(data=data.T, columns=["ImageId", "Label"])
-		tmp.to_csv("knn-ans.csv", index=False)
+		tmp.to_csv("pred.csv", index=False)
